@@ -1,0 +1,97 @@
+﻿@page "/registro-representante"
+@inject AppBlazorSDP.Services.EmpleadoService empleadoService
+
+<h3>FormRepresentante</h3>
+
+<EditForm Model="@representante" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="alert alert-danger" />
+
+    <div class="mb-3">
+        <label class="form-label">Número de Empleado</label>
+        <InputNumber @bind-Value="representante.Num_Empl" class="form-control" />
+        <ValidationMessage For="@(() => representante.Num_Empl)" class="text-danger" />
+    </div>
+
+
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <InputText @bind-Value="representante.Nombre" class="form-control" />
+        <ValidationMessage For="@(() => representante.Nombre)" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Edad</label>
+        <InputNumber @bind-Value="representante.Edad" class="form-control" />
+        <ValidationMessage For="@(() => representante.Edad)" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Cargo</label>
+        <InputText @bind-Value="representante.Cargo" class="form-control" />
+        <ValidationMessage For="@(() => representante.Cargo)" class="text-danger" />
+    </div>
+
+    <div class="form-group">
+        <label>Sucursal</label>
+        <InputSelect @bind-Value="representante.Sucursal" class="form-control">
+            <option value="">Seleccione un departamento</option>
+            @foreach (var dep in Enum.GetValues(typeof(Departamento)))
+            {
+                <option value="@dep">@dep</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => representante.Sucursal)" />
+    </div>
+
+    <div class="form-group">
+        <label>Jefe / Director</label>
+        <InputSelect @bind-Value="representante.IdJefe" class="form-control">
+            <option value="">Seleccione un Jefe</option>
+            @foreach (var jefe in listaJefes)
+            {
+                <option value="@jefe.IdJefe">@jefe.Nombre</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => representante.IdJefe)" />
+    </div>
+
+
+    <div class="mb-3">
+        <label class="form-label">Fecha de Contrato</label>
+        <InputDate @bind-Value="representante.FechaContrato" class="form-control" />
+        <ValidationMessage For="@(() => representante.FechaContrato)" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Cuota</label>
+        <InputNumber @bind-Value="representante.Cuota" class="form-control" />
+        <ValidationMessage For="@(() => representante.Cuota)" class="text-danger" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Ventas</label>
+        <InputNumber @bind-Value="representante.Ventas" class="form-control" />
+        <ValidationMessage For="@(() => representante.Ventas)" class="text-danger" />
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Guardar</button>
+</EditForm>
+
+@code {
+    private RepresentanteVentaCls representante = new();
+
+    private List<JefeCLS> listaJefes = new();
+
+    protected override void OnInitialized()
+    {
+        listaJefes = empleadoService.ListarJefes();
+    }
+
+    private async Task Guardar()
+    {
+        Console.WriteLine($"Datos guardados: {representante.Nombre}, Jefe ID: {representante.IdJefe}");
+    }
+}
+
+

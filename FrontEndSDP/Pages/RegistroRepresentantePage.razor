@@ -1,0 +1,75 @@
+﻿@page "/registro"
+@using AppBlazorSDP.Services
+@inject NavigationManager navigationManager
+@inject EmpleadoService empleadoService
+
+<h3>RegistroRepresentantePage</h3>
+
+<button @onclick="navegar" class="btn-primary"> Navegar a Registro Representantes </button>
+
+@if (lista != null && lista.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Sucursal</th>
+                <th>Jefe</th>
+                <th>Operaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in lista)
+            {
+                <tr>
+                    <td>@item.Num_Empl</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Sucursal</td>
+                    <td>@item.NombreJefe</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" @onclick="() => recuperarEmpleado(item.Num_Empl)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => eliminarEmpleado(item.Num_Empl)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay representantes registrados.</p>
+}
+
+@code {
+    public List<RepresentanteListCLS> lista { get; set; } = new List<RepresentanteListCLS>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        listarEmpleados();
+        await base.OnInitializedAsync();
+    }
+
+    private void listarEmpleados()
+    {
+        lista = empleadoService.listarRepresentantes();
+    }
+
+    private async Task navegar()
+    {
+        navigationManager.NavigateTo("/registro-representante");
+    }
+
+    private async Task recuperarEmpleado(int Num_Empl)
+    {
+        navigationManager.NavigateTo($"/formrepresentante/edit/{Num_Empl}");
+    }
+
+    private async Task eliminarEmpleado(int Num_Empl)
+    {
+
+        empleadoService.eliminarEmpleado(Num_Empl);
+        listarEmpleados();
+        StateHasChanged(); 
+    }
+}
