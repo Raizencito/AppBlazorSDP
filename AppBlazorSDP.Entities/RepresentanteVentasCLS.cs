@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
- 
+
 namespace AppBlazorSDP.Entities;
 
 public class RepresentanteVentaCls
